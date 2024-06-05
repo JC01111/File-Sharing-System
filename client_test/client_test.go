@@ -462,7 +462,7 @@ var _ = Describe("Client Tests", func() {
 			Expect(data).To(Equal([]byte(contentThree + contentFour)))
 
 		})
-		
+
 		Specify("Edge case test: creating a user with an empty username", func() {
 			userlib.DebugMsg("Initializing user \"\".")
 			_, err = client.InitUser("", defaultPassword)
@@ -746,7 +746,7 @@ var _ = Describe("Client Tests", func() {
 			Expect(data).To(Equal([]byte(contentOne + contentTwo + contentThree))) // Loading file should return the latest version
 		})
 })
-	// Simple Storing and swapping users 
+	// Simple Storing and swapping users
 	Describe("File Store and Swap Tests", func() {
 		Specify("Testing Storing and Swapping Users on the Datastore", func() {
 			//get the datastore
@@ -765,7 +765,7 @@ var _ = Describe("Client Tests", func() {
 			bobUUIDBytes := []byte("\x04\x16\xa2\x6b\xa5\x54\x33\x42\x86\xb1\x95\x49\x18\xec\xad\x7b")
 			copy(aliceUUID[:], aliceUUIDBytes)
 			copy(bobUUID[:], bobUUIDBytes)
-			//Swapping data 
+			//Swapping data
 			aliceData, gotBytes := datastore[aliceUUID]
 			Expect(gotBytes).To(Equal(true))
 
@@ -774,7 +774,7 @@ var _ = Describe("Client Tests", func() {
 			userlib.DebugMsg("Swapping user data on the datastore")
 			userlib.DatastoreGetMap()[aliceUUID] = bobData
 			userlib.DatastoreGetMap()[bobUUID] = aliceData
-			
+
 			//attempt to retrieve user now
 			userlib.DebugMsg("Getting second instance of Alice - aliceLaptop")
 			aliceLaptop, err = client.GetUser("alice", defaultPassword)
@@ -794,17 +794,17 @@ var _ = Describe("Client Tests", func() {
 			userlib.DebugMsg("Initializing users Alice.")
 			alice, err := client.InitUser("alice", defaultPassword)
 			Expect(err).To(BeNil())
-			
+
 
 			userlib.DebugMsg("Alice creating %s.", aliceFile)
 			err = alice.StoreFile(aliceFile, []byte(contentOne))
 			Expect(err).To(BeNil())
 
-			
+
 			userlib.DebugMsg("Alice creating %s.", aliceSecondFile)
 			err = alice.StoreFile(aliceSecondFile, []byte(contentTwo))
 			Expect(err).To(BeNil())
-		
+
 
 			aliceFileUUIDBytes := []byte("\xb0\x03\x99\x6f\x2a\x93\x36\x11\x2b\x63\x68\x3d\x85\x57\x51\xce")
 			aliceSecondFileUUIDBytes := []byte("\x2b\x15\xb2\x41\xa7\x39\x07\x93\xa0\x5f\x30\x70\x3e\x50\x67\xde")
@@ -995,10 +995,9 @@ var _ = Describe("Client Tests", func() {
 
 
 
-		
 
 
-// JAY testing end
+
 
 
 })

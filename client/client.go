@@ -1,6 +1,5 @@
 package client
 
-// CS 161 Project 2
 
 // Only the following imports are allowed! ANY additional imports
 // may break the autograder!
@@ -144,7 +143,7 @@ type FileReference struct {
 
 type MiddleManEntry struct {
 	MiddleManPtr uuid.UUID
-	//root key to access the middleman 
+	//root key to access the middleman
 	RootKey	[]byte
 }
 
@@ -237,8 +236,8 @@ func generateSymmetricKeys(rootKey []byte, encryptPurpose []byte, macPurpose []b
 func generateSharingMapKeys(userRootKey []byte, filename string) ([]byte, []byte, error){
 	//use filename so not all MiddleManMaps of a user share the same encrypt and mac keys
 	encryptKey, macKey, e := generateSymmetricKeys(
-		userRootKey, 
-		[]byte(SHARING_MAP_ENCRYPT_PURPOSE + filename), 
+		userRootKey,
+		[]byte(SHARING_MAP_ENCRYPT_PURPOSE + filename),
 		[]byte(SHARING_MAP_MAC_PURPOSE + filename))
 	if e != nil {
 		return nil, nil, errors.New("Failed to generate MiddleManMap keys.")
@@ -503,7 +502,7 @@ func createNewNode(content []byte) (FileNode, error) {
 }
 //Input: rootKey to access a FileNode, location of FileNode
 //Output: Deletes data at node.Next and node.ContentPtr recursively
-//TODO: 
+//TODO:
 func deleteLinkedList(rootKey []byte, location uuid.UUID) (error) {
 	if (location == uuid.Nil) {
 		return nil
@@ -559,7 +558,7 @@ func overwriteFile(file *File, content []byte) (error) {
 	//delete current linked list
 	e := deleteLinkedList(file.HeadRootKey, file.Head)
 	if e != nil {
-		return errors.New("Error from overwriteFile() " + e.Error()) 
+		return errors.New("Error from overwriteFile() " + e.Error())
 	}
 	//create a new node with the content
 	//Note createNewNode saves the content on the datastore
@@ -585,7 +584,7 @@ func saveFile(fr FileReference, file File, isOwner bool) (error) {
 	var err error
 	//get the keys and uuid for the file
 	if !isOwner {
-		//get the middleman 
+		//get the middleman
 		middleman, err := getMiddleMan(fr.RootKey, fr.MiddleManPtr)
 		if err != nil {
 			return errors.New("Error from saveFile(): " + err.Error())
@@ -713,7 +712,7 @@ func getContent(file File) ([]byte, error) {
 		if err != nil {
 			return nil, errors.New("Error from getContent() " + err.Error())
 		}
-		
+
 		//get the serial data
 		serialData, retrievedSuccessfully := userlib.DatastoreGet(fileNode.ContentPtr)
 		if !retrievedSuccessfully {
@@ -893,7 +892,7 @@ func updateAccessRights(revokee string, fr *FileReference, newFile File, userRoo
 	fr.RootKey = newRootKey
 	fr.FilePtr = newFileUUID
 	//3)get the sharing map
-	sharingMap, err := getSharingMap(userRootKey, *fr) 
+	sharingMap, err := getSharingMap(userRootKey, *fr)
 	if err != nil {
 		return errors.New("Error from updateAccessRights() " + err.Error())
 	}
@@ -922,7 +921,7 @@ func updateAccessRights(revokee string, fr *FileReference, newFile File, userRoo
 			//delete recipient's middleman
 			userlib.DatastoreDelete(middleManEntry.MiddleManPtr)
 
-		} 
+		}
 	}
 	//remove recipient from the map
 	delete(sharingMap.MiddleManMap, revokee)
@@ -947,7 +946,7 @@ func appendToFile(file *File, nodeToAppend FileNode) (error) {
 	//append a node to the old tail node
 	newNodeUUID := uuid.New()
 	oldTailNode.Next = newNodeUUID
-	//save changes to old tail node 
+	//save changes to old tail node
 	err = saveNode(file.TailRootKey, file.Tail, oldTailNode)
 	if err != nil {
 		return errors.New("Error from appendToFile() " + err.Error())
@@ -1164,7 +1163,7 @@ func (userdata *User) CreateInvitation(filename string, recipientUsername string
 	}
 	//get the ownership
 	var isOwner = (fr.FilePtr != uuid.Nil)
-	
+
 	//rootKey for accessing the middleman
 	var rootKey[]byte
 	var middleUUID uuid.UUID
@@ -1199,7 +1198,7 @@ func (userdata *User) CreateInvitation(filename string, recipientUsername string
 			return uuid.Nil, errors.New("Error from CreateInvitation(): " + err.Error())
 		}
 	} else {
-		//middleman already on datastore no need to save it 
+		//middleman already on datastore no need to save it
 		rootKey = fr.RootKey
 		middleUUID = fr.MiddleManPtr
 	}
