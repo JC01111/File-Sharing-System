@@ -12,9 +12,16 @@ Look at [client.go](https://github.com/JC01111/File-Sharing-System/blob/main/cli
 Below topics I will introduce the functionality of my system and how do they work.
 
 ### Contents
-- [Users And User Authentication]()
-- [File Operations]()
-- [Sharing and Revocation]()
+- [Users And User Authentication](https://github.com/JC01111/File-Sharing-System?tab=readme-ov-file#users-and-user-authentication)
+    - [Usernames and Passwords](https://github.com/JC01111/File-Sharing-System?tab=readme-ov-file#design-requirements-usernames-and-passwords)
+    - [Multiple Devices](https://github.com/JC01111/File-Sharing-System?tab=readme-ov-file#design-requirements-multiple-devices)
+- [File Operations](https://github.com/JC01111/File-Sharing-System?tab=readme-ov-file#file-operations)
+    - [Namespacing](https://github.com/JC01111/File-Sharing-System?tab=readme-ov-file#design-requirements-namespacing)
+    - [Files](https://github.com/JC01111/File-Sharing-System?tab=readme-ov-file#design-requirements-files)
+    - [Bandwidth & Append Efficiency](https://github.com/JC01111/File-Sharing-System?tab=readme-ov-file#design-requirements-bandwidth--append-efficiency)
+- [Sharing and Revocation](https://github.com/JC01111/File-Sharing-System?tab=readme-ov-file#sharing-and-revocation)
+    - [Sharing and Revoking](https://github.com/JC01111/File-Sharing-System?tab=readme-ov-file#design-requirements-sharing-and-revoking)
+    - [Revoked User Adversary](https://github.com/JC01111/File-Sharing-System?tab=readme-ov-file#design-requirements-revoked-user-adversary)
 
 ## Functionality Overview
 Here are 8 important functions:
@@ -38,7 +45,8 @@ Here are 8 important functions:
 ## Users And User Authentication
 In this section, I designed two constructors to support creating new users and letting users log in to the system. And my implementation successfully solved the below questions.
 
-#### Example
+**Example**
+
 This example scenario illustrates how to create new users and let existing users log in.
 
 - EvanBot calls `InitUser("evanbot", "password123")`.
@@ -56,12 +64,12 @@ This example scenario illustrates how to create new users and let existing users
 ### Design Requirements: Usernames and Passwords
 ___
 
-#### Usernames:
+**Usernames**:
 - Each user has a unique username.
 - Usernames are case-sensitive: `Bob` and `bob` are different users.
 - Usernames can be any string with 1 or more characters (not necessarily alphanumeric).
 
-#### Passwords:
+**Passwords**:
 - Different users might choose to use the same password.
 - The passwords provided by users have sufficient entropy for the PBKDF slow hash function to output an unpredictable string that an attacker cannot guess by brute force.
 - The passwords provided by users do not have sufficient entropy to resist brute-force attacks on any of the other fast hash functions (Hash, HashKDF, or HMAC).
@@ -74,7 +82,8 @@ Users must be able to create multiple User instances on different devices. In ot
 
 All changes to files made from one device must be reflected on all other devices immediately (i.e. a user should not have to call `GetUser` again to see the changes).
 
-**Example** <br>
+**Example**
+
 This example scenario illustrates how users should be able to create multiple User instances on multiple devices:
 
 - EvanBot has a copy of the system’s code running on their laptop. EvanBot has another, duplicate copy of the system’s code running on their phone.
@@ -97,9 +106,9 @@ In this section, I designed three instance methods to support creating new files
 ___
 Note that different users can have files with the same name. A user’s namespace is defined as all of the filenames they are using. One user’s namespace could contain a filename that another user is also using. In that other user’s namespace, that same filename could refer to a different file (or the same file, if it was shared).
 
-**Example:** <br>
-This example scenario illustrates how file storage and namespacing works:
+**Example:**
 
+This example scenario illustrates how file storage and namespacing works:
 - EvanBot calls `StoreFile("foods.txt", "pancakes")`.
   - Assuming that EvanBot has never stored to foods.txt before, this creates a new file called foods.txt in EvanBot’s personal namespace.
 - EvanBot calls `LoadFile("foods.txt")` and sees “pancakes”.
@@ -166,14 +175,16 @@ The total bandwidth should not scale with (including but not limited to):
 - Length of password
 - Number of users the file is shared with
 
-**Example:** <br>
+**Example:**
+
 Here is one way to consider whether your design scales with the number of appends. Suppose we call `AppendToFile` on a file 10,000 times, appending 1 byte every time. The 1,000th and 10,000th call to `AppendToFile` should use the same total bandwidth as the 1st append operation.
 
 Here is one way to consider whether your design scales with the size of the previous append. Suppose we call `AppendToFile` to append 1 terabyte of data to a file. Then, we call `AppendToFile` again on the same file to append another 100 bytes. The total bandwidth of the second call to append should not include the 1 terabyte of bandwidth from the previous (first) append.
 
 In general, one way to check for efficiency is to imagine a graph where the x-axis is the potential scaling factor (e.g. file size), and the y-axis is the total bandwidth. The plot of scaling factor vs. total bandwidth should be a flat line, not an upwards sloping line.
 
-**Example:** <br>
+**Example:**
+
 As an analogy, imagine that the users of this system have a limited phone data plan. We want to avoid excessive charges to their data plan, so we want to avoid downloading or uploading unnecessary data when appending.
 
 For example, a naive implementation would involve:
@@ -191,11 +202,11 @@ This implementation is inefficient because in step 1, the call to `DataStoreGet`
 For example, if we had a 10 terabyte file, and we wanted to append 100 bytes to the file, the implementation above would have a total bandwidth of 20 terabytes + 100 bytes. An efficient implementation would use 100 bytes of bandwidth (possibly plus some constant).
 
 
-
 ## Sharing and Revocation
 In this section, I designed three instance methods to support sharing files with other users and revoking file access from other users.
 
-**Example** <br>
+**Example**
+
 This example scenario illustrates how file sharing occurs.
 
 - EvanBot calls `StoreFile("foods.txt", "eggs")`.
