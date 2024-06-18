@@ -3,13 +3,13 @@
 <img src="./images/spying2.png" width=700>
 
 ## Overview
-In this project,I used some provide cryptographic library functions to design a secure file sharing system, which will allow users to log in, store files, and share files with other users, while in the presence of attackers. Then, I implemented my design by filling in 8 functions that users of my system can call to perform file operations.
+In this project, I used some provide cryptographic library functions to design a secure file sharing system, which will allow users to log in, store files, and share files with other users, while in the presence of attackers. Then, I implemented my design by filling in 8 functions that users of my system can call to perform file operations.
 
 This project is heavily design-oriented. So I started with a design from scratch that satisfies the functionality and security requirements.
 
 Look at [client.go](https://github.com/JC01111/File-Sharing-System/blob/main/client/client.go) for my implementation, [client_test.go](https://github.com/JC01111/File-Sharing-System/blob/main/client_test/client_test.go) for some my own written test coverages, and [Design_Docs](https://github.com/JC01111/File-Sharing-System/blob/main/reference/Design_Docs.pdf) for my design documents.
 
-Below topics I will introduce the functionality of my system and how do they work.
+I will introduce the functionality of my system and how do they work in the below topics.
 
 ### Contents
 - [Users And User Authentication](https://github.com/JC01111/File-Sharing-System?tab=readme-ov-file#users-and-user-authentication)
